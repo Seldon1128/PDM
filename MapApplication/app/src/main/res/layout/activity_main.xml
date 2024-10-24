@@ -9,15 +9,15 @@
     android:background="@drawable/bg">
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#80000000" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">>
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
