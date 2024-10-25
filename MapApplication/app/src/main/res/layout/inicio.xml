@@ -8,6 +8,15 @@
     tools:context=".MainActivity"
     android:background="@drawable/bg">
 
+    <!-- Toolbar agregado -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ToolbarTheme"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#001f3f"
+        app:titleTextColor="#FFFFFF"/> <!-- Color blanco para el título -->
+
     <!-- Dark overlay -->
     <View
         android:id="@+id/darkOverlay"
@@ -30,14 +39,14 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
                 android:text="Mis Ubicaciones"
                 android:textColor="@color/white"
                 android:textSize="34sp"
                 android:textStyle="bold"
-                android:layout_marginTop="48dp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Botón para Guardar Ubicación -->
             <Button
