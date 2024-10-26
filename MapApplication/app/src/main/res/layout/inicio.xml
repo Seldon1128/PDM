@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    android:id="@+id/mainScreen"
     android:background="@drawable/bg">
 
-    <!-- Toolbar agregado -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/ToolbarTheme"
+    <!-- AppBarLayout con Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#001f3f"
-        app:titleTextColor="#FFFFFF"/> <!-- Color blanco para el título -->
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/ToolbarTheme"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#001f3f"
+            app:titleTextColor="#FFFFFF"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Dark overlay -->
     <View
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:background="#80000000" />
 
-
-    <ScrollView
+    <!-- NestedScrollView para contenido desplazable -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="100dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="fill_parent">
 
             <!-- Encabezado de la aplicación -->
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="50dp"
                 android:text="Mis Ubicaciones"
                 android:textColor="@color/white"
                 android:textSize="34sp"
@@ -55,14 +60,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/input_bg"
-                android:text="Guardar Ubicación"
-                android:textColor="@color/white"
                 android:drawablePadding="10dp"
                 android:padding="20dp"
+                android:text="Guardar Ubicación"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintWidth_percent="0.8" />
 
             <!-- Botón para Ver Ubicaciones Guardadas -->
@@ -72,14 +77,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/input_bg"
-                android:text="Ubicaciones Guardadas"
-                android:textColor="@color/white"
                 android:drawablePadding="10dp"
                 android:padding="20dp"
+                android:text="Ubicaciones Guardadas"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/btn_guardar_ubicacion"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_guardar_ubicacion"
                 app:layout_constraintWidth_percent="0.8" />
 
             <!-- Botón para Ver Ubicaciones Favoritas -->
@@ -89,14 +94,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/input_bg"
-                android:text="Ubicaciones Favoritas"
-                android:textColor="@color/white"
                 android:drawablePadding="10dp"
                 android:padding="20dp"
+                android:text="Ubicaciones Favoritas"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/btn_ubicaciones_guardadas"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_ubicaciones_guardadas"
                 app:layout_constraintWidth_percent="0.8" />
 
             <!-- Footer con el nombre de la aplicación o slogan -->
@@ -107,11 +112,14 @@
                 android:text="¡Encuentra tus lugares favoritos!"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.439"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_ubicaciones_favoritas"
+                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
