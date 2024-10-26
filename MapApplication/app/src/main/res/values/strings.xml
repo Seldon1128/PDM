@@ -4,4 +4,6 @@
     <string name="action_share">Compartir</string>
     <string name="action_search">Buscar</string>
     <string name="action_info">Información</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>
