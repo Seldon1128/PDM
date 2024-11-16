@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MyMaps"
+rootProject.name = "My Maps"
 include(":app")
  
