@@ -1,5 +1,6 @@
 package com.example.mymaps
 
+import android.app.ComponentCaller
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,9 +9,15 @@ import com.example.mymaps.models.UserMap
 import com.example.mymaps.models.Place
 import android.util.Log
 import android.content.Intent
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import android.app.Activity
+
+
 
 
 const val EXTRA_USER_MAP = "EXTRA_USER_MAP"
+const val EXTRA_MAP_TITLE = "EXTRA_MAP_TITLE"
+private const val REQUEST_CODE = 1234
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +39,20 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        val fabCreateMap = findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        fabCreateMap.setOnClickListener{
+            Log.i(TAG,"Tap on FAB")
+            val intent = Intent(this@MainActivity, CreateMapActivity::class.java)
+            intent.putExtra(EXTRA_MAP_TITLE, "new map name")
+            startActivityForResult(intent, REQUEST_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
+        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            //Get new map data from the data
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun generateSampleData(): List<UserMap> {
