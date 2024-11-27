@@ -11,25 +11,42 @@ import android.util.Log
 import android.content.Intent
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.view.LayoutInflater
+import android.widget.EditText
+import android.widget.Toast
+import java.io.File
+import java.io.FileOutputStream
+import java.io.ObjectOutputStream
+import java.io.FileInputStream
+import java.io.ObjectInputStream
+import android.content.Context
 
 
+import android.view.Menu
 
 
 const val EXTRA_USER_MAP = "EXTRA_USER_MAP"
 const val EXTRA_MAP_TITLE = "EXTRA_MAP_TITLE"
+private const val FILENAME = "UserMaps.data"
 private const val REQUEST_CODE = 1234
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var userMaps: MutableList<UserMap>
+    private lateinit var mapAdapter: MapsAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val userMaps = generateSampleData()
+        userMaps = deserializeUserMaps(this).toMutableList()
         val rvMaps = findViewById<RecyclerView>(R.id.rvMaps) // linking the RecyclerView
         //Set layout manager on the recycler view
         rvMaps.layoutManager = LinearLayoutManager(this)
         //Set adapter on the recycler view
-        rvMaps.adapter = MapsAdapter(this, userMaps, object: MapsAdapter.OnClickListener{
+        mapAdapter = MapsAdapter(this, userMaps, object: MapsAdapter.OnClickListener{
             override fun onItemClick(position: Int){
                 Log.i(TAG, "onItemClick $position")
                 // When user taps on view in RV, navigate to new activity
@@ -39,20 +56,81 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        rvMaps.adapter = mapAdapter
+
         val fabCreateMap = findViewById<FloatingActionButton>(R.id.floatingActionButton)
         fabCreateMap.setOnClickListener{
             Log.i(TAG,"Tap on FAB")
-            val intent = Intent(this@MainActivity, CreateMapActivity::class.java)
-            intent.putExtra(EXTRA_MAP_TITLE, "new map name")
+            showAlertDialog()
+
+        }
+    }
+
+    private fun showAlertDialog(){
+        val mapFormView = LayoutInflater.from(this).inflate(R.layout.dialog_create_map, null)
+        val dialog =
+            AlertDialog.Builder(this)
+                .setTitle("Map title")
+                .setView(mapFormView)
+                .setNegativeButton("Cancel",null)
+                .setPositiveButton("Ok",null)
+                .show()
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener{
+            val title = mapFormView.findViewById<EditText>(R.id.etTitle).text.toString()
+            if(title.trim().isEmpty()){
+                Toast.makeText(this,"Map must have a non-empty title", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            // Navigate to create map activity
+            val intent = Intent (this@MainActivity, CreateMapActivity::class.java)
+            intent.putExtra(EXTRA_MAP_TITLE, title)
             startActivityForResult(intent, REQUEST_CODE)
+            dialog.dismiss()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
             //Get new map data from the data
+            val userMap = data?.getSerializableExtra(EXTRA_USER_MAP) as UserMap
+            Log.i(TAG,"onActivityResult with new map title $(userMap.title)")
+            userMaps.add(userMap)
+            mapAdapter.notifyItemInserted(userMaps.size - 1)
+            serializeUserMaps(this, userMaps)
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun serializeUserMaps(context: Context, userMaps: List<UserMap>) {
+        try {
+            Log.i(TAG, "serializeUserMaps")
+            ObjectOutputStream(FileOutputStream(getDataFile(context))).use { it.writeObject(userMaps) }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error serializing user maps", e)
+        }
+    }
+
+
+    private fun deserializeUserMaps(context: Context): List<UserMap> {
+        Log.i(TAG, "deserializeUserMaps")
+        val dataFile = getDataFile(context)
+        if (!dataFile.exists()) {
+            Log.i(TAG, "Data file does not exist yet")
+            return emptyList()
+        }
+        return try {
+            ObjectInputStream(FileInputStream(dataFile)).use { it.readObject() as List<UserMap> }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error deserializing user maps", e)
+            emptyList()
+        }
+    }
+
+
+    private fun getDataFile(context: Context) : File{
+        Log.i(TAG,"Getting file from de directory ${context.filesDir}")
+        return File(context.filesDir, FILENAME)
     }
 
     private fun generateSampleData(): List<UserMap> {

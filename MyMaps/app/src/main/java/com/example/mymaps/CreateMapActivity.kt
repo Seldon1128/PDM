@@ -15,9 +15,17 @@ import com.google.android.gms.maps.model.Marker
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.widget.EditText
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.content.ContextCompat
+import android.app.Activity
+import android.content.Intent
+import android.view.Menu
+import android.widget.Toast
+import com.example.mymaps.models.UserMap
+import com.example.mymaps.models.Place
+
 
 
 private const val TAG= "CreateMapActivity"
@@ -47,14 +55,41 @@ class CreateMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?):Boolean{
+        menuInflater.inflate(R.menu.menu_create_map, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Checj that 'item' is the save menu option
+        if(item.itemId == R.id.miSave){
+            Log.i(TAG,"Tapped on save!")
+            if (markers.isEmpty()){
+                Toast.makeText(this,"There must be at least one marker on the map", Toast.LENGTH_LONG).show()
+                return true
+            }
+            val places = markers.map { marker ->
+                Place(
+                    title = marker.title ?: "Untitled",
+                    description = marker.snippet ?: "No description",
+                    latitude = marker.position.latitude,
+                    longitude = marker.position.longitude
+                )
+            }
+            val mapTitle = intent.getStringExtra(EXTRA_MAP_TITLE) ?: "Untitled Map"
+            val userMap = UserMap(mapTitle, places)
+            val data = Intent()
+            data.putExtra(EXTRA_USER_MAP, userMap)
+            setResult(Activity.RESULT_OK, data)
+            finish() //Return to MainActivity
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -70,9 +105,8 @@ class CreateMapActivity : AppCompatActivity(), OnMapReadyCallback {
             showAlertDialog(latLng)
         }
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val siliconValley = LatLng(37.4, -122.1)
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(siliconValley,10f))
     }
 
     private fun showAlertDialog(latLng:LatLng){
