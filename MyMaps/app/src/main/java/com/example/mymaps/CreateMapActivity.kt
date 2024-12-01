@@ -105,8 +105,8 @@ class CreateMapActivity : AppCompatActivity(), OnMapReadyCallback {
             showAlertDialog(latLng)
         }
         // Add a marker in Sydney and move the camera
-        val siliconValley = LatLng(37.4, -122.1)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(siliconValley,10f))
+        val cdmxSur = LatLng(19.3, -99.1)
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cdmxSur,10f))
     }
 
     private fun showAlertDialog(latLng:LatLng){
